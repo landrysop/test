@@ -1,8 +1,13 @@
-orbs:
-  maven: circleci/maven@1.1.0
-version: 2.1
-workflows:
-  maven_test:
-    jobs:
-      - maven/test:
-          app_src_directory: alpha
+dependencies:
+  override:
+    - mvn -DskipTests clean install dependency:resolve-plugins dependency:go-offline
+
+test:
+  override:
+    - mvn -o surefire:test
+
+deployment:
+  main:
+    branch: master
+    commands:
+      - mvn -s .circleci.settings.xml -DskipTests deploy
